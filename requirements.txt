@@ -1,0 +1,1 @@
+python_json_config==1.2.3

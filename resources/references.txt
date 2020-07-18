@@ -1,0 +1,8 @@
+# Geowox Job Description
+https://www.linkedin.com/jobs/view/1891599862/?alternateChannel=search
+
+# ETL Pipeline Suggestions
+https://medium.com/datadriveninvestor/complete-data-analytics-solution-using-etl-pipeline-in-python-edd6580de24b
+
+# PPR Data
+https://www.propertypriceregister.ie/website/npsra/ppr/npsra-ppr.nsf/Downloads/PPR-ALL.zip/$FILE/PPR-ALL.zip
