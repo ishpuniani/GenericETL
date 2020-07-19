@@ -5,7 +5,7 @@ class Pipeline:
         self.loader = loader
 
     def run(self):
-        self.extractor.extract()
+        # self.extractor.extract()
 
         self.transformer.transform()
 

@@ -12,7 +12,8 @@
     }
   },
   "transform": {
-    "type": "csv",
+    "type": "ppr",
+    "mapping_rel": "resources/transform_mapping.json",
     "mapping": "/Users/dhruv/Projects/PyCharmProjects/GenericETL/resources/transform_mapping.json",
     "source": {
       "type": "s3",
@@ -20,7 +21,7 @@
     },
     "destination": {
       "type": "s3",
-      "path": "resources/transform/ppr.csv"
+      "path": "transform/ppr.csv"
     }
   },
   "load": {

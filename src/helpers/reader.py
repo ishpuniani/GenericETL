@@ -1,3 +1,4 @@
+import pandas as pd
 import ssl
 
 from abc import abstractmethod
@@ -12,6 +13,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 class Reader:
+    # ENCODING = "ISO-8859-1"
+    ENCODING = "windows-1252"
+
     def __init__(self, config):
         if config is not None:
             self._init_from_config(config)
@@ -42,7 +46,7 @@ class HttpReader(Reader):
             resp = urlopen(url)
             zipfile = ZipFile(BytesIO(resp.read()))
             file = zipfile.namelist()[0]
-            content = [str(row, "ISO-8859-1") for row in zipfile.open(file, 'r').readlines()]
+            content = [str(row, self.ENCODING) for row in zipfile.open(file, 'r').readlines()]
             print("Downloaded content!")
             return content
         except URLError as ue:
@@ -54,7 +58,7 @@ class HttpReader(Reader):
 
 
 class S3Reader(Reader):
-    s3_base = 'resources/s3_buckets/'
+    s3_bucket = 'resources/s3_buckets/'
 
     def _init_from_config(self, config):
         if config.path is None:
@@ -66,13 +70,12 @@ class S3Reader(Reader):
         """
         Simulating reading content from s3
         Actually reading from s3_buckets folder in resources.
-        :return: file content
+        :return: file content in pandas dataframe
         """
-        location = self.s3_base + self.path
+        location = self.s3_bucket + self.path
         try:
             print("Reading content from : " + location)
-            file = open(location, 'r')
-            content = file.readlines()
+            content = pd.read_csv(location)
             return content
         except FileNotFoundError as fe:
             print("File not found at : " + location)

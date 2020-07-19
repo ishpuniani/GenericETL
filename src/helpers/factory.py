@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 from extract import GenericExtractor
 from load import CsvLoader
-from transform import CsvTransformer
+from transform import CsvTransformer, PprTransformer
 from .reader import HttpReader, S3Reader
 from .writer import S3Writer
 
@@ -40,6 +40,8 @@ class TransformerFactory(Factory):
     def _create(cls, config):
         if config.type.lower() == 'csv':
             return CsvTransformer(config)
+        elif config.type.lower() == 'ppr':
+            return PprTransformer(config)
         else:
             raise ValueError("Invalid transformer type: " + config.type)
 

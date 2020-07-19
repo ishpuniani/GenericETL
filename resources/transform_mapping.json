@@ -1,3 +1,35 @@
-{
-
-}
+[
+  {
+    "field": "Date of Sale (dd/mm/yyyy)",
+    "target_field": "sales_date",
+    "type": "date",
+    "options": {
+      "format": "%d/%m/%Y"
+    }
+  },
+  {
+    "field": "Address",
+    "target_field": "address",
+    "type": "string"
+  },
+  {
+    "field": "County",
+    "target_field": "county",
+    "type": "string"
+  },
+  {
+    "field": "Price (€)",
+    "target_field": "sales_value",
+    "type": "price"
+  },
+  {
+    "field": "Not Full Market Price",
+    "target_field": "not_full_market_price_ind",
+    "type": "bool_int"
+  },
+  {
+    "field": "VAT Exclusive",
+    "target_field": "vat_exclusive_ind",
+    "type": "bool_int"
+  }
+]

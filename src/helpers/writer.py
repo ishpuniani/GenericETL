@@ -22,7 +22,7 @@ class Writer:
 
 
 class S3Writer(Writer):
-    s3_base = S3Reader.s3_base
+    s3_bucket = S3Reader.s3_bucket
 
     def _init_from_config(self, config):
         self.type = config.type
@@ -33,7 +33,7 @@ class S3Writer(Writer):
         Simulating writing to s3 bucket
         :param content: the content to be written, line by line
         """
-        filename = self.s3_base + self.path
+        filename = self.s3_bucket + self.path
         try:
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with open(filename, "w") as f:
