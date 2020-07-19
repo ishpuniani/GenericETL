@@ -5,6 +5,10 @@ class Pipeline:
         self.loader = loader
 
     def run(self):
+        """
+        Runs the pipeline using the objects initialized
+        :return: None
+        """
         self.extractor.extract()
 
         self.transformer.transform()

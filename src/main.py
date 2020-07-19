@@ -12,8 +12,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     try:
+        # load pipeline config from json
         pipeline_config = ConfigBuilder().parse_config(config=args.pipeline_config_path)
 
+        # generate objects from config
         extractor = ExtractorFactory.create(pipeline_config.extract)
         transformer = TransformerFactory.create(pipeline_config.transform)
         loader = LoaderFactory.create(pipeline_config.load)

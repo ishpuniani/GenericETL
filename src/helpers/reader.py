@@ -40,6 +40,10 @@ class HttpReader(Reader):
         self.unzip = False if config.unzip is None else config.unzip
 
     def read(self):
+        """
+        Reads and unzips file found over http
+        :return: list of csv rows
+        """
         url = self.path
         try:
             print("Downloading content from : " + url)

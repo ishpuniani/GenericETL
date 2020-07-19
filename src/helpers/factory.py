@@ -10,6 +10,11 @@ from .writer import S3Writer
 class Factory:
     @classmethod
     def create(cls, config):
+        """
+        Factory method to create objects on the basis of the key "type" in configuration
+        :param config: config object
+        :return: instance of appropriate class on the basis of "type"
+        """
         try:
             if config is not None and config.type is not None:
                 obj = cls._create(config)
@@ -27,6 +32,10 @@ class Factory:
 
 
 class ExtractorFactory(Factory):
+    """
+    Factory for Extractors
+    """
+
     @classmethod
     def _create(cls, config):
         if config.type.lower() == 'generic':
@@ -36,6 +45,10 @@ class ExtractorFactory(Factory):
 
 
 class TransformerFactory(Factory):
+    """
+    Factory for Transformers
+    """
+
     @classmethod
     def _create(cls, config):
         if config.type.lower() == 'csv':
@@ -47,6 +60,10 @@ class TransformerFactory(Factory):
 
 
 class LoaderFactory(Factory):
+    """
+    Factory for Loaders
+    """
+
     @classmethod
     def _create(cls, config):
         if config.type.lower() == 'csv':
@@ -56,6 +73,10 @@ class LoaderFactory(Factory):
 
 
 class ReaderFactory(Factory):
+    """
+    Factory for Readers
+    """
+
     @classmethod
     def _create(cls, config):
         if config.type.lower() == 'http':
@@ -67,6 +88,10 @@ class ReaderFactory(Factory):
 
 
 class WriterFactory(Factory):
+    """
+    Factory for Writers
+    """
+
     @classmethod
     def _create(cls, config):
         if config.type.lower() == 's3':
