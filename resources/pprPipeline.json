@@ -27,6 +27,7 @@
   "load": {
     "type": "csv",
     "backup": true,
+    "primary_keys" : ["address","county","sales_value"],
     "upsert": {
       "source": {
         "type": "s3",

@@ -1,5 +1,6 @@
 import json
 import datetime as dt
+import unicodedata
 import pandas as pd
 import numpy as np
 
@@ -50,7 +51,8 @@ class CsvTransformer(Transformer):
 
     def _before_transform(self):
         self.source_df = self.source.read()
-        print(self.source_df.head())
+        print("source count: " + str(self.source_df.shape[0]))
+        # print(self.source_df.head())
         self.data = pd.DataFrame()
         print("Read data to be transformed")
 
@@ -62,7 +64,8 @@ class CsvTransformer(Transformer):
     def _after_transform(self):
         print("Transformed! Writing transformed data")
         data = self.data
-        print(data.head())
+        # print(data.head())
+        print("transformed data count: " + str(data.shape[0]))
         csv_buffer = StringIO()
         data.to_csv(csv_buffer, index=False)
         self.destination.write(csv_buffer.getvalue())
@@ -90,8 +93,13 @@ class CsvTransformer(Transformer):
             raise ValueError("Invalid pre-processing type")
 
     def process_string(self, field, options=None):
-        arr = field.str.replace('-', '').str.lower()
+        arr = field.str.lower().str.strip()
+        arr = [self.strip_accents(val) for val in arr]
         return arr
+
+    def strip_accents(self, s):
+        return ''.join(c for c in unicodedata.normalize('NFD', s)
+                       if unicodedata.category(c) != 'Mn')
 
     def process_price(self, field, options=None):
         arr = pd.to_numeric(field.str[1:].str.replace(',', ''), errors='coerce').astype(float)
@@ -140,22 +148,24 @@ class PprTransformer(CsvTransformer):
         non_duplicate_records = self.data.drop_duplicates(subset=["address", "county", "sales_value"])
         duplicate_records = self.data[~self.data.isin(non_duplicate_records)]
 
-        self.data['quarantine_ind'] = np.where(self.data['address'].isin(duplicate_records['address']), 1,
-                                               (np.where(~self.data['county'].isin(self.county_list), 1, 0)))
+        self.data["quarantine_ind"] = np.where(
+            np.logical_and(self.data['not_full_market_price_ind'] == 1, self.data['new_home_ind'] == 1), 1,
+            np.where(self.data['address'].isin(duplicate_records['address']), 1,
+                     (np.where(~self.data['county'].isin(self.county_list), 1, 0))))
 
         # quarantine_code:
-        # NU-NC -> non unique - invalid county
-        # NU -> non unique
-        # NC -> invalid county
-        self.data['quarantine_code'] = np.where(
-            np.logical_and(self.data['address'].isin(duplicate_records['address']), ~self.data['county'].isin(
-                self.county_list)), "NU-NC",
-            np.where(self.data['address'].isin(duplicate_records['address']), "NU",
-                     np.where(~self.data['county'].isin(self.county_list), "NC", "")))
+        # ERR - DUP RECORD -> non unique
+        # ERR - INVALID COUNTY -> invalid county
+        # ERR - NEW HOME NOT FULL MARKET VALUE -> not full market value
+        self.data["quarantine_code"] = np.where(
+            np.logical_and(self.data['not_full_market_price_ind'] == 1, self.data['new_home_ind'] == 1),
+            "ERR - NEW HOME NOT FULL MARKET VALUE",
+            np.where(self.data['address'].isin(duplicate_records['address']), "ERR - DUP RECORD",
+                     (np.where(~self.data['county'].isin(self.county_list), "ERR - INVALID COUNTY", ""))))
 
-        month_start_date = []
+        month_start = []
         for old_date in self.data["sales_date"]:
             dt_obj = dt.datetime.strptime(old_date, '%d/%m/%Y')
             new_date = """1/{}/{}""".format(dt_obj.month, dt_obj.year)
-            month_start_date.append(new_date)
-        self.data["month_start_date"] = month_start_date
+            month_start.append(new_date)
+        self.data["month_start"] = month_start
