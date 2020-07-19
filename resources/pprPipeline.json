@@ -8,15 +8,15 @@
     },
     "destination": {
       "type": "s3",
-      "path": "resources/extract/ppr.csv"
+      "path": "extract/ppr.csv"
     }
   },
   "transform": {
     "type": "csv",
-    "mapping": "resources/transform_mapping.json",
+    "mapping": "/Users/dhruv/Projects/PyCharmProjects/GenericETL/resources/transform_mapping.json",
     "source": {
       "type": "s3",
-      "path": "resources/extract/ppr.csv"
+      "path": "extract/ppr.csv"
     },
     "destination": {
       "type": "s3",
@@ -26,20 +26,21 @@
   "load": {
     "type": "csv",
     "backup": true,
-    "update": {"source": {
+    "upsert": {
+      "source": {
         "type": "s3",
-        "path": "resources/transform/ppr.csv"
+        "path": "transform/ppr.csv"
       }
     },
     "current": {
       "source": {
         "type": "s3",
-        "path": "resources/load/ppr_current.csv"
+        "path": "load/ppr_current.csv"
       }
     },
     "destination": {
       "type": "s3",
-      "path": "resources/load/ppr_current.csv"
+      "path": "load/ppr_current.csv"
     }
   }
 }

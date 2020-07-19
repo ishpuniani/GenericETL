@@ -1,9 +1,8 @@
 import argparse
-import json
 import sys
 import traceback
 
-from factory import ExtractorFactory, TransformerFactory, LoaderFactory
+from helpers.factory import ExtractorFactory, TransformerFactory, LoaderFactory
 from pipeline import Pipeline
 from python_json_config import ConfigBuilder
 
@@ -13,10 +12,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     try:
-        # pipeline_config = json.loads(open(args.pipeline_config_path))
         pipeline_config = ConfigBuilder().parse_config(config=args.pipeline_config_path)
-        # extract_config = pipeline_config.extract
-        # print(extract_config.extract)
 
         extractor = ExtractorFactory.create(pipeline_config.extract)
         transformer = TransformerFactory.create(pipeline_config.transform)
